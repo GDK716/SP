@@ -1,0 +1,225 @@
+#!/bin/bash
+until false ; do
+
+echo Программа для отслеживания даты изменения файла
+echo С помощью этой программы можно узнать изменялся ли файл после указанной даты
+echo Разработал Гуськов Антон Евгеньевич
+echo
+echo Вы находитесь в $PWD
+
+echo Введите название файла
+read fname1
+fname=$PWD/$fname1
+
+truename=0
+trueyear=0
+truemonth=0
+trueday=0
+truehour=0
+trueminute=0
+trueseconds=0
+answerprog=0
+
+until [ $truename -eq 1 ] ; do
+
+truename=0
+
+if [ ! -f $fname ] ; then
+echo "Ошибка: $fname не существует!" >&2
+until [[ "$answername" = "y" || "$answername" = "n" ]] ; do
+echo "Желаете продолжить? (y/n)"
+read answername;
+done
+
+if [ "$answername" = "y" ] ; then
+echo Введите название файла
+read fname1
+fname=$PWD/$fname1
+answername="a"
+else
+exit
+fi
+else
+truename=1
+fi
+done
+
+echo Укажите дату, чтобы узнать, изменялся ли файл после этой даты
+echo Укажите год
+read year
+
+until [ $trueyear -eq 1 ] ; do
+
+if [[ $year -lt 1970 || -z $year ]] ; then
+echo "Ошибка, ожидается число и больше 1970!">&2
+until [[ "$answeryear" = "y" || "$answeryear" = "n" ]] ; do
+echo "Желаете продолжить? (y/n)"
+read answeryear;
+done
+
+if [ "$answeryear" = "y" ] ; then
+echo Укажите год
+read year
+answeryear="a"
+else
+exit
+fi
+else
+trueyear=1
+fi
+done
+
+echo Укажите месяц
+read month
+
+until [ $truemonth -eq 1 ] ; do
+
+if [[ -z $month || $month -lt 1 || $month -gt 12 ]] ; then
+echo "Ошибка, ожидается целое число больше 0 и не больше 12!">&2
+until [[ "$answermonth" = "y" || "$answermonth" = "n" ]] ; do
+echo "Желаете продолжить? (y/n)"
+read answermonth;
+done
+
+if [ "$answermonth" = "y" ] ; then
+echo Укажите месяц
+read month
+answermonth="a"
+else
+exit
+fi
+else
+truemonth=1
+fi
+done
+
+echo Укажите день
+read day
+
+until [ $trueday -eq 1 ] ; do
+
+if [ "$year % 4" != 0 ] ; then
+badyear=0
+else
+if [ "$year % 100" == 0 ] ; then
+if [ "$year % 400" == 0 ] ; then
+badyear=1
+else
+badyear=0
+fi
+else
+badyear=1
+fi
+fi
+
+if [[ -z $day || $day -lt 1 || $day -gt 31 || ($badyear -eq 0 && $month -eq 2 && $day -gt 28) ]] ; then
+echo "Ошибка, ожидается целое число больше 0 и не больше 12!"
+until [[ "$answerday" = "y" || "$answerday" = "n" ]] ; do
+echo "Желаете продолжить? (y/n)"
+read answerday;
+done
+
+if [ "$answerday" = "y" ] ; then
+echo Укажите день
+read day
+answerday="a"
+else
+exit
+fi
+else
+trueday=1
+fi
+done
+
+echo Укажите час
+read hour
+
+until [ $truehour -eq 1 ] ; do
+
+if [[ -z $hour || $hour -lt 0 || $hour -gt 23 ]] ; then
+echo "Ошибка, ожидается целое число не меньше 0 и не больше 23!">&2
+until [[ "$answerhour" = "y" || "$answerhour" = "n" ]] ; do
+echo "Желаете продолжить? (y/n)"
+read answerhour;
+done
+
+if [ "$answerhour" = "y" ] ; then
+echo Укажите час
+read hour
+answerhour="a"
+else
+exit
+fi
+else
+truehour=1
+fi
+done
+
+echo Укажите минуты
+read minute
+
+until [ $trueminute -eq 1 ] ; do
+
+if [[ -z $minute || $minute -lt 0 || $minute -gt 59 ]] ; then
+echo "Ошибка, ожидается целое число не меньше 0 и не больше 59!">&2
+until [[ "$answerminute" = "y" || "$answerminute" = "n" ]] ; do
+echo "Желаете продолжить? (y/n)"
+read answerminute;
+done
+
+if [ "$answerminute" = "y" ] ; then
+echo Укажите минуты
+read minute
+answerminute="a"
+else
+exit
+fi
+else
+trueminute=1
+fi
+done
+
+echo Укажите секунды
+read seconds
+
+until [ $trueseconds -eq 1 ] ; do
+
+if [[ -z $seconds || $seconds -lt 0 || $seconds -gt 59 ]] ; then
+echo "Ошибка, ожидается целое число не меньше 0 и не больше 59!">&2
+until [[ "$answerseconds" = "y" || "$answerseconds" = "n" ]] ; do
+echo "Желаете продолжить? (y/n)"
+read answerminute;
+done
+
+if [ "$answerseconds" = "y" ] ; then
+echo Укажите секунды
+read seconds
+answerseconds="a"
+else
+exit
+fi
+else
+trueseconds=1
+fi
+done
+
+fdate="$year-$month-$day $hour:$minute:$seconds"
+
+if [ "$(date -r "$fname" +%s)" -gt "$(date —d "$fdate" +%s)" ] ; then
+echo "Файл $fname был изменен после $fdate"
+exit 120
+else
+echo "Файл $fname не
+ 
+изменялся после $fdate"
+fi
+
+until [[ "$answerprog" = "y" || "$answerprog" = "n" ]] ; do
+echo "Желаете продолжить? (y/n)"
+read answerprog;
+done
+
+if [ "$answerprog" = "n" ] ; then
+exit
+fi
+done
